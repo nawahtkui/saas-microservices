@@ -1,21 +1,17 @@
 {
-  "name": "saas-microservices",
-  "repository": "https://github.com/vercel/examples.git",
+  "name": "alnawah-saas",
+  "repository": "https://github.com/nawaht",
   "license": "MIT",
   "private": true,
+  "type": "module",
   "scripts": {
-    "build": "turbo run build",
-    "build:api": "turbo run build -F api",
-    "build:dashboard": "turbo run build -F dashboard",
-    "dev": "turbo run dev",
-    "dev:api": "turbo run dev -F api",
-    "dev:dashboard": "turbo run dev -F dashboard",
-    "typecheck": "turbo run typecheck"
+    "dev": "echo \"Turbo is disabled on Android\"",
+    "build": "echo \"Build disabled on Android\"",
+    "typecheck": "echo \"Typecheck disabled\""
   },
   "devDependencies": {
     "@types/node": "20.11.30",
-    "prettier": "^3.6.2",
-    "turbo": "^2.5.5"
+    "prettier": "^3.6.2"
   },
   "packageManager": "pnpm@10.14.0",
   "engines": {
@@ -23,3 +19,4 @@
     "pnpm": "10.x"
   }
 }
+

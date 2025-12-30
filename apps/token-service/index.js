@@ -1,23 +1,30 @@
-const express = require('express');
-const { ethers } = require('ethers');
-require('dotenv').config();
+import "dotenv/config";
+import express from "express";
 
 const app = express();
-app.use(express.json());
 
-const provider = new ethers.providers.JsonRpcProvider(process.env.BSC_RPC);
-const NWTK_ADDRESS = process.env.NWTK_ADDRESS;
-const NWTK_ABI = require('../../packages/web3-utils/abi.json');
-const contract = new ethers.Contract(NWTK_ADDRESS, NWTK_ABI, provider);
+/* ===============================
+   Service configuration
+================================ */
+const SERVICE_NAME = process.env.SERVICE_NAME || "token-service";
+const PORT = Number(process.env.PORT) || 3004;
 
-app.get('/balance/:address', async (req, res) => {
-  try {
-    const bal = await contract.balanceOf(req.params.address);
-    res.json({ balance: bal.toString() });
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
+/* ===============================
+   Health endpoint (STANDARD)
+================================ */
+app.get("/health", (_req, res) => {
+  res.status(200).json({
+    status: "ok",
+    service: SERVICE_NAME,
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
 });
 
-const PORT = process.env.PORT || 4001;
-app.listen(PORT, () => console.log(`token-service running on port ${PORT}`));
+/* ===============================
+   Server start
+================================ */
+app.listen(PORT, () => {
+  console.log(`🪙 ${SERVICE_NAME} running on port ${PORT}`);
+});
+

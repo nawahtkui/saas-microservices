@@ -1,12 +1,30 @@
-const express = require('express');
-require('dotenv').config();
-const app = express();
-app.use(express.json());
+import "dotenv/config";
+import express from "express";
 
-app.post('/mint', (req, res) => {
-  const { name, creator } = req.body;
-  // هنا سيتم لاحقًا إضافة تكامل IPFS والعقد الذكي
-  res.json({ status: 'queued', name, creator });
+const app = express();
+
+/* ===============================
+   Service configuration
+================================ */
+const SERVICE_NAME = process.env.SERVICE_NAME || "nft-service";
+const PORT = Number(process.env.PORT) || 3005;
+
+/* ===============================
+   Health endpoint (STANDARD)
+================================ */
+app.get("/health", (_req, res) => {
+  res.status(200).json({
+    status: "ok",
+    service: SERVICE_NAME,
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
 });
 
-app.listen(4003, () => console.log('nft-service running on port 4003'));
+/* ===============================
+   Server start
+================================ */
+app.listen(PORT, () => {
+  console.log(`🖼️ ${SERVICE_NAME} running on port ${PORT}`);
+});
+
