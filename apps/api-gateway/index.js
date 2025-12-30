@@ -1,72 +1,85 @@
+import "dotenv/config";
 import express from "express";
+import fetch from "node-fetch";
 
 const app = express();
-const PORT = 3010;
+app.use(express.json());
 
-// Timeout (ms) لكل خدمة
-const TIMEOUT = 2000;
+const PORT = Number(process.env.PORT) || 3010;
+const SERVICE_NAME = process.env.SERVICE_NAME || "api-gateway";
 
-// قائمة الخدمات
-const services = [
-  { name: "api-core", url: "http://localhost:3002/health" },
-  { name: "auth-service", url: "http://localhost:3003/health" },
-  { name: "token-service", url: "http://localhost:3004/health" },
-  { name: "nft-service", url: "http://localhost:3005/health" },
-];
+const SERVICES = {
+  auth: process.env.AUTH_SERVICE_URL,
+  api: process.env.API_CORE_URL,
+  token: process.env.TOKEN_SERVICE_URL,
+  nft: process.env.NFT_SERVICE_URL,
+};
 
-// fetch مع timeout
-async function fetchWithTimeout(url, timeout) {
-  const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeout);
-
-  try {
-    const res = await fetch(url, { signal: controller.signal });
-    return await res.json();
-  } finally {
-    clearTimeout(id);
+for (const [name, url] of Object.entries(SERVICES)) {
+  if (!url) {
+    throw new Error(`Missing ${name.toUpperCase()}_SERVICE_URL`);
   }
 }
 
+// Gateway health
 app.get("/health", async (_req, res) => {
   const results = {};
-  let healthy = 0;
-  let unhealthy = 0;
 
-  await Promise.all(
-    services.map(async (service) => {
-      try {
-        const data = await fetchWithTimeout(service.url, TIMEOUT);
-        results[service.name] = data;
-
-        if (data.status === "ok") {
-          healthy++;
-        } else {
-          unhealthy++;
-        }
-      } catch {
-        results[service.name] = {
-          status: "error",
-          error: "Service unreachable or timeout",
-        };
-        unhealthy++;
-      }
-    })
-  );
-
-  const overallStatus = unhealthy === 0 ? "ok" : "degraded";
+  for (const [name, url] of Object.entries(SERVICES)) {
+    try {
+      const r = await fetch(`${url}/health`);
+      results[name] = await r.json();
+    } catch {
+      results[name] = { status: "down" };
+    }
+  }
 
   res.json({
-    gateway: "api-gateway",
-    status: overallStatus,
+    gateway: SERVICE_NAME,
+    status: "ok",
     timestamp: new Date().toISOString(),
-    summary: {
-      total: services.length,
-      healthy,
-      unhealthy,
-    },
     services: results,
   });
 });
+
+// Proxy helper
+async function proxy(req, res, target) {
+  try {
+    const r = await fetch(target, {
+      method: req.method,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: req.headers.authorization || "",
+      },
+      body:
+        req.method === "GET" || req.method === "HEAD"
+          ? undefined
+          : JSON.stringify(req.body),
+    });
+
+    const data = await r.text();
+    res.status(r.status).send(data);
+  } catch (e) {
+    res.status(502).json({ error: "Service unreachable" });
+  }
+}
+
+// Routes
+app.use("/auth", (req, res) =>
+  proxy(req, res, `${SERVICES.auth}${req.originalUrl}`)
+);
+
+app.use("/api", (req, res) =>
+  proxy(req, res, `${SERVICES.api}${req.originalUrl.replace("/api", "")}`)
+);
+
+app.use("/token", (req, res) =>
+  proxy(req, res, `${SERVICES.token}${req.originalUrl.replace("/token", "")}`)
+);
+
+app.use("/nft", (req, res) =>
+  proxy(req, res, `${SERVICES.nft}${req.originalUrl.replace("/nft", "")}`)
+);
 
 app.listen(PORT, () => {
   console.log(`🌐 API Gateway running on port ${PORT}`);

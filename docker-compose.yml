@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  auth-service:
+    build: ./apps/auth-service
+    env_file:
+      - ./apps/auth-service/.env
+    ports:
+      - "3003:3003"
+
+  api-core:
+    build: ./apps/api-core
+    ports:
+      - "3002:3002"
+
+  token-service:
+    build: ./apps/token-service
+    ports:
+      - "3004:3004"
+
+  nft-service:
+    build: ./apps/nft-service
+    ports:
+      - "3005:3005"
+
+  api-gateway:
+    build: ./apps/api-gateway
+    env_file:
+      - ./apps/api-gateway/.env
+    ports:
+      - "3010:3010"
+    depends_on:
+      - auth-service
+      - api-core
+      - token-service
+      - nft-service
