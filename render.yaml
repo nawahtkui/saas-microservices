@@ -1,0 +1,50 @@
+services:
+  - type: web
+    name: api-gateway
+    env: docker
+    plan: free
+    dockerfilePath: apps/api-gateway/Dockerfile
+    buildCommand: ""
+    startCommand: "node index.js"
+    envVars:
+      - key: AUTH_SERVICE_URL
+        value: "http://auth-service:3003"
+      - key: API_CORE_URL
+        value: "http://api-core:3002"
+      - key: TOKEN_SERVICE_URL
+        value: "http://token-service:3004"
+      - key: NFT_SERVICE_URL
+        value: "http://nft-service:3005"
+
+  - type: web
+    name: auth-service
+    env: docker
+    plan: free
+    dockerfilePath: apps/auth-service/Dockerfile
+    buildCommand: ""
+    startCommand: "node index.js"
+
+  - type: web
+    name: api-core
+    env: docker
+    plan: free
+    dockerfilePath: apps/api-core/Dockerfile
+    buildCommand: ""
+    startCommand: "pnpm dev"
+
+  - type: web
+    name: token-service
+    env: docker
+    plan: free
+    dockerfilePath: apps/token-service/Dockerfile
+    buildCommand: ""
+    startCommand: "node index.js"
+
+  - type: web
+    name: nft-service
+    env: docker
+    plan: free
+    dockerfilePath: apps/nft-service/Dockerfile
+    buildCommand: ""
+    startCommand: "node index.js"
+
