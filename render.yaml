@@ -4,9 +4,11 @@ services:
     env: docker
     plan: free
     dockerfilePath: apps/api-gateway/Dockerfile
-    buildCommand: ""
-    startCommand: "node index.js"
     envVars:
+      - key: PORT
+        value: "3010"
+      - key: SERVICE_NAME
+        value: "api-gateway"
       - key: AUTH_SERVICE_URL
         value: "http://auth-service:3003"
       - key: API_CORE_URL
@@ -21,30 +23,46 @@ services:
     env: docker
     plan: free
     dockerfilePath: apps/auth-service/Dockerfile
-    buildCommand: ""
-    startCommand: "node index.js"
+    envVars:
+      - key: PORT
+        value: "3003"
+      - key: SERVICE_NAME
+        value: "auth-service"
+      - key: JWT_SECRET
+        value: "change_this_in_render_dashboard"
+      - key: JWT_EXPIRES_IN
+        value: "1h"
+      - key: BCRYPT_ROUNDS
+        value: "10"
 
   - type: web
     name: api-core
     env: docker
     plan: free
     dockerfilePath: apps/api-core/Dockerfile
-    buildCommand: ""
-    startCommand: "pnpm dev"
+    envVars:
+      - key: PORT
+        value: "3002"
 
   - type: web
     name: token-service
     env: docker
     plan: free
     dockerfilePath: apps/token-service/Dockerfile
-    buildCommand: ""
-    startCommand: "node index.js"
+    envVars:
+      - key: PORT
+        value: "3004"
+      - key: SERVICE_NAME
+        value: "token-service"
 
   - type: web
     name: nft-service
     env: docker
     plan: free
     dockerfilePath: apps/nft-service/Dockerfile
-    buildCommand: ""
-    startCommand: "node index.js"
+    envVars:
+      - key: PORT
+        value: "3005"
+      - key: SERVICE_NAME
+        value: "nft-service"
 
