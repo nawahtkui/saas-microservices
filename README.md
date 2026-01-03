@@ -1,48 +1,161 @@
-# SaaS Microservices
+# SaaS Microservices Backend
 
-This is an example SaaS project with 2 API services defined as microservices.
+Production-ready **SaaS backend architecture** built with Node.js and Microservices.
 
-## Getting Started
+This project provides a solid foundation for building developer platforms, internal tools, or SaaS products.
 
-```sh
-pnpm install
+---
+
+## ✨ Features
+
+- 🔐 JWT Authentication (Auth Service)
+- 🌐 API Gateway (env-based routing)
+- 🧩 Microservices architecture
+- 🐳 Docker & docker-compose ready
+- 🧪 Health checks for all services
+- ⚙️ Environment-based configuration
+- 📄 Clean API documentation
+
+---
+
+## 🧱 Architecture Overview
+
+
+Client
+|
+v
+API Gateway (3010)
+|
+|-- Auth Service (3003)
+|-- API Core (3002)
+|-- Token Service (3004)
+|-- NFT Service (3005)
+
+
+All external traffic goes through the **API Gateway**.
+
+---
+
+## 🚀 Getting Started
+
+### Local Development (without Docker)
+
+Start services manually:
+
+```bash
+# Auth Service
+cd apps/auth-service
+node index.js
+
+# API Core
+cd apps/api-core
 pnpm dev
-```
 
-Open http://localhost:3024 to view the dashboard. The dashboard will make API calls
-to the `api` service for the information to display in the dashboard.
+# Token Service
+cd apps/token-service
+node index.js
 
-## How It Works
+# NFT Service
+cd apps/nft-service
+node index.js
 
-There are 2 separate applications in this example:
+# API Gateway
+cd apps/api-gateway
+node index.js
 
-- `dashboard` - A [Next.js](https://nextjs.org/) application to show the UI. This application also controls the `microfrontends.json` configuration to route API paths to the other microservices (see below).
-- `api` - An [Express.js](https://expressjs.com/) backend serving data displayed in the dashboard.
 
-These all run under the same domain. Paths to each application are routed using Vercel's [microfrontends](https://vercel.com/docs/microfrontends) support:
+Gateway will be available at
 
-```mermaid
-graph TD
-    Request --> Vercel{Vercel}
+http://localhost:3010
 
-    Vercel -->|"/api/*"| Api[api]
-    Vercel -->|"Everything else"| DashboardApp[Dashboard]
-```
 
-## Running Locally
+Docker (Recommended) 
 
-To run all applications together, run:
+Docker is supported on Linux, macOS, Windows (WSL).
 
-```sh
-pnpm dev
-```
 
-A [local development proxy](https://vercel.com/docs/microfrontends/local-development) is automatically run to stitch requests from each application to the local instance of each service.
 
-A single or subset of applications can also be run:
+docker compose up --build
 
-```sh
-pnpm dev:dashboard
-pnpm dev:api
-pnpm turbo run dev -F api -F dashboard
-```
+Gateway:
+
+http://localhost:3010
+
+📄 API Documentation 
+
+Full API documentation is available here:
+
+➡️ docs/api.md
+
+Includes:
+
+Authentication endpoints
+
+JWT usage
+
+Gateway routes
+
+Health checks
+
+Error codes
+
+
+Authentication Flow 
+
+Register user
+
+Login to receive JWT
+
+Send JWT via Authorization: Bearer <token>
+
+Access protected routes through Gateway
+
+
+🧪 Health Check
+
+curl http://localhost:3010/health
+
+
+Returns aggregated health of all services
+
+🗂️ Project Structure 
+
+
+
+apps/
+  api-core/
+  api-gateway/
+  auth-service/
+  token-service/
+  nft-service/
+
+docs/
+  api.md
+
+docker-compose.yml
+
+
+🧠 Use Cases 
+
+SaaS backend foundation
+
+Developer platforms
+
+Internal tools
+
+API-first products
+
+Microservices learning reference
+
+📌 Status 
+
+✅ Stable
+✅ Production-ready foundation
+🚧 Business logic can be extended
+
+📜 License 
+
+MIT
+
+
+
