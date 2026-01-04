@@ -1,0 +1,39 @@
+openapi: 3.0.3
+info:
+  title: Nawah SaaS API
+  version: 1.0.0
+  description: |
+    Core API specification for the SaaS Microservices platform.
+
+servers:
+  - url: https://api.example.com
+
+paths:
+  /auth/login:
+    post:
+      summary: User login
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                  refreshToken:
+                    type: string

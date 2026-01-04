@@ -1,0 +1,34 @@
+name: Docs Versioning on Release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  version-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare versioned docs
+        run: |
+          VERSION=${GITHUB_REF_NAME}
+          TARGET_DIR="docs/versions/$VERSION"
+
+          echo "📦 Creating docs version: $VERSION"
+
+          mkdir -p "$TARGET_DIR"
+
+          cp docs/*.md "$TARGET_DIR"
+
+          echo "Versioned docs created at $TARGET_DIR"
+
+      - name: Commit versioned docs
+        run: |
+          git config user.name "docs-version-bot"
+          git config user.email "docs-version-bot@users.noreply.github.com"
+
+          git add docs/versions
+          git commit -m "docs: snapshot documentation for release $GITHUB_REF_NAME"
+          git push

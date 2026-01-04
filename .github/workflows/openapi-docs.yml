@@ -1,0 +1,27 @@
+name: OpenAPI Docs Sync
+
+on:
+  push:
+    paths:
+      - "docs/openapi/**"
+
+jobs:
+  openapi-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate API docs from OpenAPI
+        run: |
+          npx -y @redocly/cli build-docs docs/openapi/openapi.yaml \
+            -o docs/api-contracts.md
+
+      - name: Commit generated docs
+        run: |
+          git config user.name "openapi-bot"
+          git config user.email "openapi-bot@users.noreply.github.com"
+
+          git add docs/api-contracts.md
+          git diff --cached --quiet || git commit -m "docs: sync api-contracts from OpenAPI spec"
+          git push

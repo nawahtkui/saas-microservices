@@ -1,0 +1,32 @@
+name: Docs Coverage Gate
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  docs-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check if code changed
+        id: code
+        run: |
+          git diff --name-only origin/main...HEAD | grep -E '^apps/' && echo "code_changed=true" >> $GITHUB_OUTPUT || echo "code_changed=false" >> $GITHUB_OUTPUT
+
+      - name: Check if docs changed
+        id: docs
+        run: |
+          git diff --name-only origin/main...HEAD | grep -E '^docs/' && echo "docs_changed=true" >> $GITHUB_OUTPUT || echo "docs_changed=false" >> $GITHUB_OUTPUT
+
+      - name: Enforce docs coverage
+        run: |
+          if [ "${{ steps.code.outputs.code_changed }}" = "true" ] && [ "${{ steps.docs.outputs.docs_changed }}" = "false" ]; then
+            echo "❌ Code changed without updating docs"
+            exit 1
+          fi
+          echo "✅ Docs coverage satisfied"

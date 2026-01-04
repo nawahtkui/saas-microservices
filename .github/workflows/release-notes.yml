@@ -1,0 +1,30 @@
+name: Auto Release Notes
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  release-notes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate release notes
+        run: |
+          echo "## 📦 Release Notes" > release.md
+          echo "" >> release.md
+          echo "### Architecture" >> release.md
+          sed -n '1,120p' docs/architecture.md >> release.md
+          echo "" >> release.md
+          echo "### Auth Flow" >> release.md
+          sed -n '1,120p' docs/auth-flow.md >> release.md
+          echo "" >> release.md
+          echo "### Tokenomics" >> release.md
+          sed -n '1,120p' docs/tokenomics.md >> release.md
+
+      - name: Publish release notes
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: release.md

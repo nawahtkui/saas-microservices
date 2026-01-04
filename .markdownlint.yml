@@ -1,0 +1,25 @@
+# MarkdownLint configuration
+
+default: true
+
+# Allow long lines (ASCII diagrams & URLs)
+MD013: false
+
+# Allow multiple headings with same content (common in docs)
+MD024: false
+
+# Allow inline HTML if needed later
+MD033: false
+
+# Require a single top-level heading
+MD025: true
+
+# Enforce consistent unordered list markers
+MD004:
+  style: dash
+
+# Enforce spaces instead of tabs
+MD010: true
+
+# Allow fenced code blocks without language (ASCII diagrams)
+MD040: false
