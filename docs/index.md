@@ -4,16 +4,13 @@ title: Nawah Documentation
 sidebar_position: 1
 ---
 
-# Nawah Documentation
+## 🚀 Welcome to Nawah
 
-Welcome to **Nawah** documentation.
+**Nawah** is a hybrid **SaaS + Web3 platform** focused on:
+- Scalable microservices
+- Secure authentication
+- Transparent tokenomics
+- Cultural & social empowerment
 
-This documentation covers:
-- Architecture
-- Authentication & Security
-- API Contracts
-- Sequences
-- Tokenomics
-
-Use the sidebar to navigate through the system.
+Use the sidebar to explore the system architecture, APIs, and flows.
 
