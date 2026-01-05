@@ -1,62 +1,16 @@
-# Auth Flow with Refresh Token
+```text
+Auth Refresh Token Sequence Diagram
 
-This diagram explains authentication with access & refresh tokens.
-
----
-
-## Auth + Refresh Flow (ASCII)
-
-Client API Core Auth Service Database
-
-| | | |
-
-| Login | | |
-
-|------------->| | |
-
-| | Validate creds | |
-
-| |---------------->| |
-
-| | | Verify user |
-
-| | |----------------->|
-
-| | | Generate tokens |
-
-| | |----------------->|
-
-| | Access + Refresh| |
-
-|<-------------|-----------------| |
-
-| | | |
-
-| API request | | |
-
-|------------->| Verify access | |
-
-| |---------------->| |
-
-| Access expired | |
-
-|-------------- Refresh request ------------------->|
-
-| | | Validate refresh |
-
-| | |----------------->|
-
-| | New access token| |
-
-|<-------------|-----------------| |
+Client --> API Core --> Auth Service
+Auth Service --> Token Store
+Auth Service --> API Core --> Client
 
 
+
+🔑 لاحظ:
+- ```text في الأعلى
+- ``` وحدها في **آخر سطر**
 
 ---
-
-## Security Notes
-- Refresh tokens stored securely
-- Access tokens short-lived
-- Rotation supported
 
 

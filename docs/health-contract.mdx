@@ -1,32 +1,13 @@
-# Health Endpoint Contract
-
-This document defines the standard **Health Check Contract** used across all microservices.
-
-## Endpoint
+```text
+Health Contract Specification
 
 GET /health
-
-## Response (200 OK)
-
+Response: 200 OK
 {
-  "status": "ok",
-  "service": "<service-name>",
-  "uptime": 123.45,
-  "timestamp": "ISO-8601"
+  "status": "ok"
 }
 
-## Fields
 
-status: service health
-service: service name
-uptime: process uptime in seconds
-timestamp: response time
+> (هذا مثال مؤقت للتجربة فقط)
 
-## Services
 
-api-core:3002
-auth-service:3003
-token-service:3004
-nft-service:3005
-
-Status: Adopted
