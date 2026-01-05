@@ -7,18 +7,15 @@ const config = {
   tagline: 'SaaS Microservices & Web3 Platform',
   favicon: 'img/favicon.ico',
 
-  future: {
-    v4: true,
-  },
-
-  // GitHub Pages base config
   url: 'https://nawahtkui.github.io',
   baseUrl: '/saas-microservices/',
 
   organizationName: 'nawahtkui',
   projectName: 'saas-microservices',
 
-  onBrokenLinks: 'throw',
+  trailingSlash: true,
+
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
 
   i18n: {
@@ -31,16 +28,22 @@ const config = {
       'classic',
       {
         docs: {
-          routeBasePath: '/', // Docs at site root
+          routeBasePath: '/', // docs on root
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl:
             'https://github.com/nawahtkui/saas-microservices/edit/main/',
           showLastUpdateTime: true,
           showLastUpdateAuthor: true,
+          lastVersion: 'current',
+          versions: {
+            current: {
+              label: 'v1.0.0',
+            },
+          },
         },
-        blog: false, // Disable blog
+        blog: false,
         theme: {
-          customCss: './src/css/custom.css',
+          customCss: require.resolve('./src/css/custom.css'),
         },
       },
     ],
@@ -48,10 +51,6 @@ const config = {
 
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */ ({
-      image: 'img/docusaurus-social-card.jpg',
-      colorMode: {
-        respectPrefersColorScheme: true,
-      },
       navbar: {
         title: 'Nawah Docs',
         logo: {
@@ -72,10 +71,12 @@ const config = {
           },
         ],
       },
+
       footer: {
         style: 'dark',
         copyright: `Copyright © ${new Date().getFullYear()} Nawah Project.`,
       },
+
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
